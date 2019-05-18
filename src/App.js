@@ -9,6 +9,7 @@ const App = () => {
   const [formatPretty, setFormatPretty] = useState(true);
   const [messages, setMessages] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   const options = {
     convertImage: mammoth.images.imgElement(function(image) {
@@ -26,9 +27,9 @@ const App = () => {
     readFileInputEventAsArrayBuffer(event, function(arrayBuffer) {
       mammoth.convertToHtml({ arrayBuffer: arrayBuffer }, options)
         .then(result => {
-          console.log(result);
           setConvertedHTML(result.value);
           setMessages(result.messages);
+          setCopied(false);
           setLoading(false);
         })
         .done();
@@ -43,6 +44,14 @@ const App = () => {
     };
     reader.readAsArrayBuffer(file);
   }
+
+  function copyToClipboard() {
+    navigator.clipboard.writeText(formatPretty ? pretty(convertedHTML, { ocd: true }) : convertedHTML)
+    .then(() => {
+      setCopied(true)
+      setTimeout(function(){ setCopied(false); }, 1000);
+    });
+  };
 
   return (
     <Container>
@@ -72,13 +81,26 @@ const App = () => {
           })}
         </Message>
       }
-      <Segment style={{overflow:'auto', height: '70vh' }} loading={loading}>
+      <Segment attached='top' style={{overflow:'auto', height: '60vh' }} loading={loading}>
         {!!convertedHTML &&
           <pre>
             {formatPretty ? pretty(convertedHTML, { ocd: true }) : convertedHTML}
           </pre>
         }
+
       </Segment>
+      {}
+      <Segment attached='bottom' textAlign='right'>
+        <Button
+          style={{ transition: 'background-color 0.25s ease' }}
+          size="mini"
+          icon="clipboard outline"
+          content="Copy to Clipboard"
+          color={copied ? 'green' : 'grey'}
+          disabled={!convertedHTML}
+          onClick={copyToClipboard} />
+      </Segment>
+
     </Container>
   )
 }
