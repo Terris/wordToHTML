@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { Grid, Container, Message, Button, Icon, Segment } from 'semantic-ui-react';
+import { Grid, Container, Message, Button, Icon, Segment, Radio } from 'semantic-ui-react';
 import mammoth from 'mammoth';
 import pretty from 'pretty';
 import { FilePicker } from 'react-file-picker';
 
 const App = () => {
   const [convertedHTML, setConvertedHTML] = useState(null);
+  const [formatPretty, setFormatPretty] = useState(true);
   const [messages, setMessages] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -46,8 +47,12 @@ const App = () => {
   return (
     <Container>
       <Grid>
-        <Grid.Column width={10}>
+        <Grid.Column width={8}>
           <h2>Convert Word File to HTML</h2>
+        </Grid.Column>
+        <Grid.Column width={2} textAlign="right" style={{paddingTop: '21px'}}>
+          Pretty HTML &nbsp; &nbsp;
+          <Radio toggle checked={formatPretty} style={{position: 'absolute', top: '20px'}} onChange={() => {setFormatPretty(formatPretty ? false : true)}} />
         </Grid.Column>
         <Grid.Column width={6} textAlign="right">
           <FilePicker
@@ -59,7 +64,7 @@ const App = () => {
           </FilePicker>
         </Grid.Column>
       </Grid>
-      {!!messages &&
+      {!!messages && !!messages.length &&
         <Message>
           <p><strong>Ohp, looks like there were some issues while converting the file:</strong></p>
           {messages.map((message, index) => {
@@ -70,7 +75,7 @@ const App = () => {
       <Segment style={{overflow:'auto', height: '70vh' }} loading={loading}>
         {!!convertedHTML &&
           <pre>
-            {pretty(convertedHTML, { ocd: true })}
+            {formatPretty ? pretty(convertedHTML, { ocd: true }) : convertedHTML}
           </pre>
         }
       </Segment>
