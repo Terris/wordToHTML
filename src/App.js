@@ -65,6 +65,7 @@ const App = () => {
         </Grid.Column>
         <Grid.Column width={6} textAlign="right">
           <FilePicker
+            maxSize={6}
             extensions={['docx']}
             onChange={FileObject => (handleFileSelect(FileObject))}
             onError={err => (console.log(err))}
