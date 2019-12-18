@@ -57,7 +57,7 @@ const App = () => {
     <Container>
       <Grid>
         <Grid.Column width={8}>
-          <h2>Convert Word File to HTML</h2>
+          <h2>Convert Word Docs to HTML</h2>
         </Grid.Column>
         <Grid.Column width={2} textAlign="right" style={{paddingTop: '21px'}}>
           Pretty HTML &nbsp; &nbsp;
